@@ -2,16 +2,16 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Setup Environment') {
             steps {
                 echo 'Setting up PHP environment...'
+                // Check for PHP and Composer
+                sh 'which php || exit 1'
                 sh 'php -v'
+                sh 'which composer || exit 1'
+                sh 'composer -v'
+
+                // Install dependencies
                 sh 'composer install'
             }
         }
@@ -19,34 +19,21 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the application...'
-                sh 'php artisan build' // Adjust to your build command
+                sh 'php artisan build'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'php artisan test' // Adjust to your test command
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application...'
-                // Deployment commands here
+                sh 'php artisan test'
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline finished!'
-        }
-        success {
-            echo 'Pipeline succeeded!'
-        }
         failure {
-            echo 'Pipeline failed!'
+            echo 'Pipeline failed. Check logs for details.'
         }
     }
 }

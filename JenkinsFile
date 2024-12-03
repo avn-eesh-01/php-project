@@ -1,1 +1,44 @@
+pipeline {
+    agent any // Specifies where the pipeline should run
 
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm // Check out the code from the repository
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building the application...'
+                // Example: Build commands (e.g., Maven, Gradle, npm)
+                sh 'mvn clean package' // Example: Maven build
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                // Example: Test commands
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application...'
+                // Example: Deploy commands (e.g., copying files to a server)
+                sh 'scp target/myapp.jar user@server:/path/to/deploy'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished!'
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}

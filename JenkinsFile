@@ -1,31 +1,39 @@
 pipeline {
-    agent any // Specifies where the pipeline should run
+    agent any
 
     stages {
         stage('Checkout Code') {
             steps {
-                checkout scm // Check out the code from the repository
+                checkout scm
             }
         }
+
+        stage('Setup Environment') {
+            steps {
+                echo 'Setting up PHP environment...'
+                sh 'php -v'
+                sh 'composer install'
+            }
+        }
+
         stage('Build') {
             steps {
                 echo 'Building the application...'
-                // Example: Build commands (e.g., Maven, Gradle, npm)
-                sh 'mvn clean package' // Example: Maven build
+                sh 'php artisan build' // Adjust to your build command
             }
         }
+
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                // Example: Test commands
-                sh 'mvn test'
+                sh 'php artisan test' // Adjust to your test command
             }
         }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying the application...'
-                // Example: Deploy commands (e.g., copying files to a server)
-                sh 'scp target/myapp.jar user@server:/path/to/deploy'
+                // Deployment commands here
             }
         }
     }

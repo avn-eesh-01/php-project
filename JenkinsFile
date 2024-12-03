@@ -2,38 +2,41 @@ pipeline {
     agent any
 
     stages {
-        stage('Setup Environment') {
+        stage('Checkout') {
             steps {
-                echo 'Setting up PHP environment...'
-                // Check for PHP and Composer
-                sh 'which php || exit 1'
-                sh 'php -v'
-                sh 'which composer || exit 1'
-                sh 'composer -v'
-
-                // Install dependencies
-                sh 'composer install'
+                // Pull the code from your GitHub repository
+                git branch: 'main', url: 'https://github.com/avn-eesh-01/php-project'
             }
         }
-
         stage('Build') {
             steps {
-                echo 'Building the application...'
-                sh 'php artisan build'
+                // Example: Placeholder for the build process
+                // Replace this with actual build commands for your project
+                bat 'echo "Building the project..."'
             }
         }
-
         stage('Test') {
             steps {
-                echo 'Running tests...'
-                sh 'php artisan test'
+                // Example: Placeholder for running tests
+                // Replace with actual test commands
+                bat 'echo "Running tests..."'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Example: Placeholder for deployment process
+                // Replace with your deployment steps
+                bat 'echo "Deploying the application..."'
             }
         }
     }
 
     post {
+        success {
+            echo 'Pipeline completed successfully.'
+        }
         failure {
-            echo 'Pipeline failed. Check logs for details.'
+            echo 'Pipeline failed.'
         }
     }
 }
